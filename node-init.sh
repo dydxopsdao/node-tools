@@ -47,10 +47,10 @@ function setup_golang() {
     sudo tar -C /usr/local -xzf go${GO_VERSION}.linux-${ARCH}.tar.gz
     rm go${GO_VERSION}.linux-${ARCH}.tar.gz
     echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.bashrc
-    . ~/.bashrc
 }
 
 function setup_cosmovisor() {
+    . ~/.bashrc
     go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@latest
     mkdir -p $DAEMON_HOME/cosmovisor/genesis/bin
     mkdir -p $DAEMON_HOME/cosmovisor/upgrades
