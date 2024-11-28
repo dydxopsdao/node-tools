@@ -10,7 +10,7 @@ PROTOCOLD_VERSION=v7.0.1
 
 # Chain-specific constants (see: https://docs.dydx.exchange/infrastructure_providers-network/resources)
 CHAIN_ID=dydx-testnet-4
-BASE_SNAPSHOT_URL="https://snapshots.polkachu.com/snapshots"
+BASE_SNAPSHOT_URL="https://snapshots.polkachu.com/snapshots/"
 SEED_NODES=(
     "19d38bb5cea1378db3e16615e63594dc26119a1a@dydx-testnet4-seednode.allthatnode.com:26656"
     "87ee8de5f0f82af6ee6740a30f8844bbe6434413@seed.dydx-testnet.cros-nest.com:26656"
