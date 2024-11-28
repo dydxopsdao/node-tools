@@ -4,6 +4,9 @@
 # https://docs.dydx.exchange/infrastructure_providers-validators/set_up_full_node
 # It adds readability tweaks and comments.
 
+# Strict error handling
+set -e
+
 # User constants
 NODE_NAME=my-full-node-testnet-$RANDOM
 PROTOCOLD_VERSION=v7.0.1
@@ -21,6 +24,7 @@ SEED_NODES=(
 )
 
 # Other constants
+DAEMON_HOME=$HOME/.dydxprotocol
 GO_VERSION=1.22.2
 WHITE='\033[1;37m'
 NC='\033[0m' # No Color
@@ -48,39 +52,38 @@ function setup_golang() {
 
 function setup_cosmovisor() {
     go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@latest
-    mkdir -p $HOME/.dydxprotocol/cosmovisor/genesis/bin
-    mkdir -p $HOME/.dydxprotocol/cosmovisor/upgrades
+    mkdir -p $DAEMON_HOME/cosmovisor/genesis/bin
+    mkdir -p $DAEMON_HOME/cosmovisor/upgrades
 }
 
 function setup_dydx_binary() {
     curl -L -O https://github.com/dydxprotocol/v4-chain/releases/download/protocol%2F${PROTOCOLD_VERSION}/dydxprotocold-${PROTOCOLD_VERSION}-linux-${ARCH}.tar.gz
     sudo tar -xzvf dydxprotocold-${PROTOCOLD_VERSION}-linux-${ARCH}.tar.gz
-    sudo mv ./build/dydxprotocold-${PROTOCOLD_VERSION}-linux-${ARCH} $HOME/.dydxprotocol/cosmovisor/genesis/bin/dydxprotocold
+    sudo mv ./build/dydxprotocold-${PROTOCOLD_VERSION}-linux-${ARCH} $DAEMON_HOME/cosmovisor/genesis/bin/dydxprotocold
     rm dydxprotocold-${PROTOCOLD_VERSION}-linux-${ARCH}.tar.gz
     rm -rf build
-    echo 'export PATH=$PATH:$HOME/.dydxprotocol/cosmovisor/current/bin' >> $HOME/.bashrc
+    echo 'export PATH=$PATH:$DAEMON_HOME/cosmovisor/current/bin' >> $HOME/.bashrc
     . ~/.bashrc
 }
 
 function initialize_node() {
-    $HOME/.dydxprotocol/cosmovisor/genesis/bin/dydxprotocold init --chain-id=$CHAIN_ID $NODE_NAME
-    sed -i 's/seeds = ""/seeds = "'"${SEED_NODES[*]}"'"/' $HOME/.dydxprotocol/config/config.toml
+    $DAEMON_HOME/cosmovisor/genesis/bin/dydxprotocold init --chain-id=$CHAIN_ID $NODE_NAME
+    sed -i 's/seeds = ""/seeds = "'"${SEED_NODES[*]}"'"/' $DAEMON_HOME/config/config.toml
 }
 
 function setup_snapshot() {
-    cp $HOME/.dydxprotocol/data/priv_validator_state.json $HOME/.dydxprotocol/priv_validator_state.json.backup
-    rm -rf $HOME/.dydxprotocol/data
+    cp $DAEMON_HOME/data/priv_validator_state.json $DAEMON_HOME/priv_validator_state.json.backup
+    rm -rf $DAEMON_HOME/data
 
     SNAPSHOT_FILENAME=$(curl -s ${BASE_SNAPSHOT_URL} | grep -oP 'dydx_\d+\.tar\.lz4' | sort -V | tail -n 1)
     SNAPSHOT_URL="${BASE_SNAPSHOT_URL}/dydx/${SNAPSHOT_FILENAME}"
 
-    cd $HOME/.dydxprotocol
+    cd $DAEMON_HOME
     wget $SNAPSHOT_URL
     SNAPSHOT_FILENAME=$(basename $SNAPSHOT_URL)
     lz4 -dc < $SNAPSHOT_FILENAME | tar xf -
-    cd $HOME
     
-    mv $HOME/.dydxprotocol/priv_validator_state.json.backup $HOME/.dydxprotocol/data/priv_validator_state.json
+    mv $DAEMON_HOME/priv_validator_state.json.backup $DAEMON_HOME/data/priv_validator_state.json
 }
 
 function setup_systemd() {
@@ -92,11 +95,11 @@ After=network-online.target
 [Service]
 User=$USER
 ExecStart=/$HOME/go/bin/cosmovisor run start --non-validating-full-node=true
-WorkingDirectory=$HOME/.dydxprotocol
+WorkingDirectory=$DAEMON_HOME
 Restart=always
 RestartSec=5
 LimitNOFILE=4096
-Environment="DAEMON_HOME=$HOME/.dydxprotocol"
+Environment="DAEMON_HOME=$DAEMON_HOME"
 Environment="DAEMON_NAME=dydxprotocold"
 Environment="DAEMON_ALLOW_DOWNLOAD_BINARIES=false"
 Environment="DAEMON_RESTART_AFTER_UPGRADE=true"
