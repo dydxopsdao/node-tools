@@ -13,13 +13,13 @@ PROTOCOLD_VERSION=v7.0.1
 
 # Chain-specific constants (see: https://docs.dydx.exchange/infrastructure_providers-network/resources)
 CHAIN_ID=dydx-testnet-4
-BASE_SNAPSHOT_URL="https://snapshots.polkachu.com/snapshots/"
+BASE_SNAPSHOT_URL="https://snapshots.polkachu.com/testnet-snapshots/"
 SEED_NODES=(
-    "19d38bb5cea1378db3e16615e63594dc26119a1a@dydx-testnet4-seednode.allthatnode.com:26656"
-    "87ee8de5f0f82af6ee6740a30f8844bbe6434413@seed.dydx-testnet.cros-nest.com:26656"
-    "38e5a5ec34c578dc323cbdd9b98330abb448d586@tenderseed.ccvalidators.com:29104"
-    "80a1a6cd086634c34008c6457d3f7441cfc05c47@seeds.kingnodes.com:27056"
-    "182ab0015fb4b7d751b12a9c0162ac123445eac1@seed.dydx-testnet.stakingcabin.com:26656"
+    "19d38bb5cea1378db3e16615e63594dc26119a1a@dydx-testnet4-seednode.allthatnode.com:26656",
+    "87ee8de5f0f82af6ee6740a30f8844bbe6434413@seed.dydx-testnet.cros-nest.com:26656",
+    "38e5a5ec34c578dc323cbdd9b98330abb448d586@tenderseed.ccvalidators.com:29104",
+    "80a1a6cd086634c34008c6457d3f7441cfc05c47@seeds.kingnodes.com:27056",
+    "182ab0015fb4b7d751b12a9c0162ac123445eac1@seed.dydx-testnet.stakingcabin.com:26656",
     "76b472b107ccf20c3d6c110c4a2a217306d2dedb@dydx-seed.staker.space:26656"
 )
 
@@ -80,7 +80,6 @@ function setup_snapshot() {
 
     cd $DAEMON_HOME
     wget $SNAPSHOT_URL
-    SNAPSHOT_FILENAME=$(basename $SNAPSHOT_URL)
     lz4 -dc < $SNAPSHOT_FILENAME | tar xf -
     
     mv $DAEMON_HOME/priv_validator_state.json.backup $DAEMON_HOME/data/priv_validator_state.json
@@ -144,10 +143,10 @@ echo -e "${WHITE}=== To start your node, run: ===${NC}"
 echo "sudo systemctl start dydxprotocold"
 echo ""
 echo -e "${WHITE}=== Other handy commands: ===${NC}"
-echo "# Stop the node:          sudo systemctl stop dydxprotocold"
-echo "# Check the node status:  sudo systemctl status dydxprotocold" 
-echo "# See logs:               sudo journalctl -u dydxprotocold -f"
-echo "# See open ports:         sudo netstat -tpln"
-echo "# See block height:       curl -s http://localhost:26657/status | jq -r '.result.sync_info.latest_block_height'"
-echo "# See app version:        curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info | jq -r '.application_version.version'"
-echo "# See prometheus metrics: curl http://localhost:26660/metrics"
+echo "Stop the node:          sudo systemctl stop dydxprotocold"
+echo "Check the node status:  sudo systemctl status dydxprotocold" 
+echo "See logs:               sudo journalctl -u dydxprotocold -f"
+echo "See open ports:         sudo netstat -tpln"
+echo "See block height:       curl -s http://localhost:26657/status | jq -r '.result.sync_info.latest_block_height'"
+echo "See app version:        curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info | jq -r '.application_version.version'"
+echo "See prometheus metrics: curl http://localhost:26660/metrics"
