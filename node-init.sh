@@ -26,13 +26,15 @@ SEED_NODES=(
 # Other constants
 DAEMON_HOME=$HOME/.dydxprotocol
 GO_VERSION=1.22.2
-WHITE='\033[1;37m'
-NC='\033[0m' # No Color
+
 ARCH=$(case $(uname -m) in
     x86_64) echo "amd64" ;;
     aarch64) echo "arm64" ;;
     *) echo "Unsupported architecture: $(uname -m). Only amd64 and arm64 are supported." && exit 1 ;;
 esac)
+
+WHITE='\033[1;37m'
+NC='\033[0m' # No Color
 
 # ----------------------------
 
