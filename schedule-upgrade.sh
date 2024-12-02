@@ -7,11 +7,6 @@
 # 2. Extracting the binary to a temporary location
 # 3. Moving the binary to the daemon home directory
 # 4. Scheduling an upgrade through Cosmovisor at current_height + blocks_ahead
-#
-# Requirements:
-# - Cosmovisor must be installed and configured
-# - Active validator node with RPC endpoint accessible at localhost:26657
-# - Proper permissions to execute Cosmovisor commands
 
 # Strict error handling
 set -e
@@ -57,7 +52,7 @@ Usage: ${SCRIPT_NAME} [OPTIONS]
 Schedules a dYdX Protocol binary upgrade using Cosmovisor.
 
 Required:
-    --target-version <string>   Version to upgrade to (e.g., v7.0.1)
+    --target-version <string>   Version to upgrade to (e.g., v7.0.2)
 
 Optional:
     --blocks-ahead <int>        Number of blocks to wait before upgrade (default: ${DEFAULT_BLOCKS_AHEAD})
@@ -70,7 +65,7 @@ Environment Variables:
     DAEMON_NAME                 Override daemon binary name (default: ${DEFAULT_DAEMON_NAME})
 
 Example:
-    $SCRIPT_NAME --target-version v7.0.1 --blocks-ahead 100
+    $SCRIPT_NAME --target-version v7.0.2 --blocks-ahead 100
 EOF
     exit 1
 }

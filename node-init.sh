@@ -36,10 +36,10 @@ esac)
 
 # ----------------------------
 
-function install_dependencies() {
+function instal_system_tools() {
     cd $HOME
     sudo apt-get -y update
-    sudo apt-get install -y curl jq lz4
+    sudo apt-get install -y curl jq lz4 net-tools tree
 }
 
 function setup_golang() {
@@ -113,8 +113,8 @@ EOF
 }
 
 function main() {
-    echo -e "${WHITE}🔧 Installing system dependencies...${NC}"
-    install_dependencies
+    echo -e "${WHITE}🔧 Installing system tools...${NC}"
+    instal_system_tools
 
     echo -e "${WHITE}🚀 Setting up Golang ${GO_VERSION}...${NC}"
     setup_golang
