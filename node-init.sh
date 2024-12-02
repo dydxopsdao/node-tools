@@ -47,10 +47,10 @@ function setup_golang() {
     sudo tar -C /usr/local -xzf go${GO_VERSION}.linux-${ARCH}.tar.gz
     rm go${GO_VERSION}.linux-${ARCH}.tar.gz
     echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.bashrc
+    export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
 }
 
 function setup_cosmovisor() {
-    . ~/.bashrc
     go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@latest
     mkdir -p $DAEMON_HOME/cosmovisor/genesis/bin
     mkdir -p $DAEMON_HOME/cosmovisor/upgrades
@@ -63,7 +63,6 @@ function setup_dydx_binary() {
     rm dydxprotocold-${PROTOCOLD_VERSION}-linux-${ARCH}.tar.gz
     rm -rf build
     echo 'export PATH=$PATH:$DAEMON_HOME/cosmovisor/current/bin' >> $HOME/.bashrc
-    . ~/.bashrc
 }
 
 function initialize_node() {
