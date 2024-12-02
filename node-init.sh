@@ -136,6 +136,8 @@ function main() {
     setup_systemd
 }
 
+# ----------------------------
+
 main
 
 echo -e "${WHITE}✅ Setup complete! The node is ready to start.${NC}"
