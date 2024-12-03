@@ -64,7 +64,7 @@ function setup_dydx_binary() {
     sudo mv ./build/dydxprotocold-${PROTOCOLD_VERSION}-linux-${ARCH} $DAEMON_HOME/cosmovisor/genesis/bin/dydxprotocold
     rm dydxprotocold-${PROTOCOLD_VERSION}-linux-${ARCH}.tar.gz
     rm -rf build
-    echo 'export PATH=$PATH:$DAEMON_HOME/cosmovisor/current/bin' >> $HOME/.bashrc
+    echo 'export PATH=$PATH:'$DAEMON_HOME'/cosmovisor/current/bin' >> $HOME/.bashrc
 }
 
 function initialize_node() {
@@ -94,7 +94,7 @@ After=network-online.target
  
 [Service]
 User=$USER
-ExecStart=/$HOME/go/bin/cosmovisor run start --non-validating-full-node=true
+ExecStart=$HOME/go/bin/cosmovisor run start --non-validating-full-node=true
 WorkingDirectory=$DAEMON_HOME
 Restart=always
 RestartSec=5
