@@ -2,11 +2,9 @@
 #
 # schedule-upgrade.sh - Schedules dYdX Protocol binary upgrades using Cosmovisor
 #
-# This script automates the upgrade process for dYdX Protocol validator nodes by:
-# 1. Downloading the specified version of dydxprotocold from GitHub releases
-# 2. Extracting the binary to a temporary location
-# 3. Moving the binary to the daemon home directory
-# 4. Scheduling an upgrade through Cosmovisor at current_height + blocks_ahead
+# This script automates the upgrade process for dYdX Protocol nodes by:
+# 1. Downloading and extracting the specified version of dydxprotocold from GitHub releases.
+# 2. Scheduling an upgrade through Cosmovisor at current_height + blocks_ahead.
 
 # Strict error handling
 set -e
