@@ -114,6 +114,11 @@ EOF
 }
 
 function main() {
+    if [ -d "$DAEMON_HOME/data" ]; then
+        echo "$DAEMON_HOME/data already exists. Skipping initialization."
+        return
+    fi
+
     echo -e "${WHITE}🔧 Installing system tools...${NC}"
     instal_system_tools
 
