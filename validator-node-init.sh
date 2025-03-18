@@ -84,7 +84,7 @@ function setup_snapshot() {
     mv $DAEMON_HOME/priv_validator_state.json.backup $DAEMON_HOME/data/priv_validator_state.json
 }
 
-function setup_systemd() {
+function setup_systemd_dydxprotocold() {
     sudo tee /etc/systemd/system/dydxprotocold.service > /dev/null << EOF
 [Unit]
 Description=dydxprotocol node service
@@ -92,7 +92,7 @@ After=network-online.target
  
 [Service]
 User=$USER
-ExecStart=$HOME/go/bin/cosmovisor run start
+ExecStart=$HOME/go/bin/cosmovisor run start --bridge-daemon-eth-rpc-endpoint https://eth-sepolia.g.alchemy.com/v2/demo
 WorkingDirectory=$DAEMON_HOME
 Restart=always
 RestartSec=5
@@ -109,6 +109,28 @@ EOF
 
     sudo systemctl daemon-reload
     sudo systemctl enable dydxprotocold
+}
+
+function setup_systemd_slinky() {
+    sudo tee /etc/systemd/system/slinky.service > /dev/null << EOF
+[Unit]
+Description=slinky connect sidecar service
+After=network-online.target
+ 
+[Service]
+User=$USER
+ExecStart=/usr/local/bin/slinky --marketmap-provider dydx_migration_api --oracle-config $HOME/slinky-oracle.json
+WorkingDirectory=$HOME
+Restart=always
+RestartSec=5
+LimitNOFILE=4096
+ 
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable slinky
 }
 
 function main() {
@@ -135,8 +157,9 @@ function main() {
     echo -e "${WHITE}📥 Downloading and setting up snapshot...${NC}"
     setup_snapshot
 
-    echo -e "${WHITE}🔄 Configuring systemd service...${NC}"
-    setup_systemd
+    echo -e "${WHITE}🔄 Configuring systemd services...${NC}"
+    setup_systemd_dydxprotocold
+    setup_systemd_slinky
 }
 
 # ----------------------------
@@ -146,6 +169,7 @@ main
 echo -e "${WHITE}✅ Setup complete! The node is ready to start.${NC}"
 echo ""
 echo -e "${WHITE}=== To start your node, run: ===${NC}"
+echo "sudo systemctl start slinky"
 echo "sudo systemctl start dydxprotocold"
 echo ""
 echo -e "${WHITE}=== Other handy commands: ===${NC}"
