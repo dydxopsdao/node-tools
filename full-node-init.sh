@@ -9,7 +9,7 @@ set -e
 
 # User constants
 NODE_NAME=my-full-node-testnet-$RANDOM
-PROTOCOLD_VERSION=v8.0.7
+PROTOCOLD_VERSION=v8.0.9
 
 # Chain-specific constants (see: https://docs.dydx.exchange/infrastructure_providers-network/resources)
 CHAIN_ID=dydx-testnet-4
